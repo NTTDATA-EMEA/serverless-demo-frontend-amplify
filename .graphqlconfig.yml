@@ -1,0 +1,15 @@
+projects:
+  sls-demo-twitter-state-api-2:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+        region: eu-central-1
+        apiId: i4k7ikmfcjcvlkmnezbckvac7q
+        maxDepth: 2
