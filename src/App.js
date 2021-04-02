@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getSlsDemoTwitterState as GetState } from './graphql/queries'
-import './App.css';
+import { getSlsDemoTwitterState as GetState } from './graphql/queries';
+import { List } from 'antd';
 
 function App() {
+  const [loading, setLoading] = useState(true);
   const [state, setState] = useState({});
 
   useEffect(() => {
@@ -21,15 +22,21 @@ function App() {
     const hashes = Object.entries(loadedState);
 
     console.log(hashes);
-    setState(hashes);
+    setState(loadedState);
+    setLoading(false);
   }
 
   return (
-    <div className="App">
-      <ul>
-        {Object.keys(state).length > 0 ? state.map(([k, v]) => <li key={k}>{k} - {v}</li>) : <li>no records</li>}
-      </ul>
-    </div>
+    <>
+      <List 
+        loading={loading}
+        dataSource={state} />
+      {/* <div className="App">
+        <ul>
+          {Object.keys(state).length > 0 ? state.map(([k, v]) => <li key={k}>{k} - {v}</li>) : <li>no records</li>}
+        </ul>
+      </div> */}
+    </>
   );
 }
 
