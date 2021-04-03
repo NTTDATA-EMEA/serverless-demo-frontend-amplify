@@ -5,7 +5,7 @@ import { List } from 'antd';
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [state, setState] = useState({});
+  const [state, setState] = useState([]);
 
   useEffect(() => {
     fetchState();
@@ -19,10 +19,11 @@ function App() {
       })
     );
     const loadedState = JSON.parse(stateData.data.getSlsDemoTwitterState.state);
-    const hashes = Object.entries(loadedState);
+    const mapState = Object.entries(loadedState);
+    const arrayState = Array.from(mapState, ([k, v]) => ({ k, v }));
 
-    console.log(hashes);
-    setState(loadedState);
+    console.log(arrayState);
+    setState(arrayState);
     setLoading(false);
   }
 
@@ -31,11 +32,6 @@ function App() {
       <List 
         loading={loading}
         dataSource={state} />
-      {/* <div className="App">
-        <ul>
-          {Object.keys(state).length > 0 ? state.map(([k, v]) => <li key={k}>{k} - {v}</li>) : <li>no records</li>}
-        </ul>
-      </div> */}
     </>
   );
 }
