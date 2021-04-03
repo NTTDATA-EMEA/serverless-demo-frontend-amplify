@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { getSlsDemoTwitterState as GetState } from './graphql/queries';
-import { List } from 'antd';
+import { Button, List } from 'antd';
+import 'antd/dist/antd.css';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -20,18 +21,36 @@ function App() {
     );
     const loadedState = JSON.parse(stateData.data.getSlsDemoTwitterState.state);
     const mapState = Object.entries(loadedState);
-    const arrayState = Array.from(mapState, ([k, v]) => ({ k, v }));
+    const arrayState = Array.from(mapState, ([hashTag, latestId]) => ({ hashTag, latestId }));
+    const arrayStateSorted = arrayState.sort((a, b) => a.hashTag < b.hashTag ? -1 : 1);
 
-    console.log(arrayState);
-    setState(arrayState);
+    console.log(arrayStateSorted);
+    setState(arrayStateSorted);
     setLoading(false);
+  }
+
+  const renderItem = (item) => {
+    return (
+      <List.Item
+        actions={[
+          <Button type="danger">Reset</Button>
+        ]}
+      >
+        <List.Item.Meta
+          title={item.hashTag}
+          description={item.latestId}
+        />
+      </List.Item>
+    );
   }
 
   return (
     <>
       <List 
+        style={{ padding: 20 }}
         loading={loading}
-        dataSource={state} />
+        dataSource={state}
+        renderItem={renderItem} />
     </>
   );
 }
