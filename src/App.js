@@ -5,7 +5,10 @@ import {
 } from './graphql/queries';
 import { onUpdateSlsDemoTwitterState as onUpdateState } from './graphql/subscriptions';
 import { Button, List } from 'antd';
+import { v4 as uuid } from 'uuid';
 import 'antd/dist/antd.css';
+
+const CLIENT_ID = uuid();
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -69,6 +72,7 @@ function App() {
 
   return (
     <>
+      <h1>{CLIENT_ID}</h1>
       <List 
         size='small'
         bordered={true}
