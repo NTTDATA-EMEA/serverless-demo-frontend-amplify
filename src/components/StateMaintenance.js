@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import {
-  updateSlsDemoTwitterState as UpdateState
-} from '../graphql/mutations';
-import {
   getSlsDemoTwitterState as GetState
 } from '../graphql/queries';
 import {
@@ -11,6 +8,7 @@ import {
 } from '../graphql/subscriptions';
 import { Button, List, Popconfirm } from 'antd';
 import { DeleteFilled, QuestionCircleFilled, UndoOutlined } from '@ant-design/icons';
+import * as stateService from '../services/StateService';
 
 export const StateMaintenance = () => {
   const [loading, setLoading] = useState(true);
@@ -52,16 +50,8 @@ export const StateMaintenance = () => {
   const resetItemLatestId = async (item) => {
     const updatedState = [...state];
     updatedState[updatedState.findIndex(i => i.hashTag === item.hashTag)].latestId = 0;
-
-    try {
-      await API.graphql({
-        query: UpdateState,
-        variables: { input: { namespace: 'aboczek', version: '1', state: transformStateToJson(updatedState) } }
-      });
-    } catch (err) {
-      console.log(err);
-    }
     setState(updatedState);
+    stateService.updateState(updatedState);
   }
 
   const deleteItem = async (item) => {
@@ -70,13 +60,8 @@ export const StateMaintenance = () => {
       ...state.slice(0, index),
       ...state.slice(index + 1)
     ];
-
     setState(updatedState);
-  }
-
-  function transformStateToJson(inputState) {
-    const mapState = new Map(inputState.map(i => [i.hashTag, i.latestId]));
-    return JSON.stringify(Object.fromEntries(mapState));
+    stateService.updateState(updatedState);
   }
 
   const renderItem = (item) => {
