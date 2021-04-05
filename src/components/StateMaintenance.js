@@ -9,7 +9,7 @@ import {
 import {
   onUpdateSlsDemoTwitterState as onUpdateState
 } from '../graphql/subscriptions';
-import { Button, List } from 'antd';
+import { Button, List, Popconfirm } from 'antd';
 
 export const StateMaintenance = () => {
   const [loading, setLoading] = useState(true);
@@ -27,7 +27,7 @@ export const StateMaintenance = () => {
         console.log(provider, value);
         fetchState();
       },
-      error: err => console.log(err);
+      error: err => console.log(err)
     })
     return () => subscription.unsubscribe();;
   }, []);
@@ -70,7 +70,15 @@ export const StateMaintenance = () => {
     return (
       <List.Item
         actions={[
-          <Button type="danger" onClick={() => resetItemLatestId(item)}>Reset</Button>
+          <Popconfirm
+            placement="topRight"
+            title="Are you sure to set id to 0?"
+            onConfirm={() => resetItemLatestId(item)}
+            okText="yes"
+            cancelText="no"
+          >
+            <Button type="default">Reset</Button>
+          </Popconfirm>
         ]}
       >
         <List.Item.Meta
