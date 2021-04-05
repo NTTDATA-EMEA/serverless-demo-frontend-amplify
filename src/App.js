@@ -8,7 +8,6 @@ function App() {
 
   return (
     <>
-      <h1>{CLIENT_ID}</h1>
       <StateMaintenance />
     </>
   );

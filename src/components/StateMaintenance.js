@@ -10,6 +10,7 @@ import {
   onUpdateSlsDemoTwitterState as onUpdateState
 } from '../graphql/subscriptions';
 import { Button, List, Popconfirm } from 'antd';
+import { DeleteFilled, QuestionCircleFilled, UndoOutlined } from '@ant-design/icons';
 
 export const StateMaintenance = () => {
   const [loading, setLoading] = useState(true);
@@ -51,19 +52,31 @@ export const StateMaintenance = () => {
   const resetItemLatestId = async (item) => {
     const updatedState = [...state];
     updatedState[updatedState.findIndex(i => i.hashTag === item.hashTag)].latestId = 0;
-    
-    const mapState = new Map(updatedState.map(i => [i.hashTag, i.latestId]));
-    const jsonState = JSON.stringify(Object.fromEntries(mapState));
 
     try {
       await API.graphql({
         query: UpdateState,
-        variables: { input: { namespace: 'aboczek', version: '1', state: jsonState }}
+        variables: { input: { namespace: 'aboczek', version: '1', state: transformStateToJson(updatedState) } }
       });
     } catch (err) {
       console.log(err);
     }
     setState(updatedState);
+  }
+
+  const deleteItem = async (item) => {
+    const index = state.findIndex(i => i.hashTag === item.hashTag);
+    const updatedState = [
+      ...state.slice(0, index),
+      ...state.slice(index + 1)
+    ];
+
+    setState(updatedState);
+  }
+
+  function transformStateToJson(inputState) {
+    const mapState = new Map(inputState.map(i => [i.hashTag, i.latestId]));
+    return JSON.stringify(Object.fromEntries(mapState));
   }
 
   const renderItem = (item) => {
@@ -76,8 +89,19 @@ export const StateMaintenance = () => {
             onConfirm={() => resetItemLatestId(item)}
             okText="yes"
             cancelText="no"
+            icon={<QuestionCircleFilled />}
           >
-            <Button type="default">Reset</Button>
+            <Button type="default" icon={<UndoOutlined />}>Reset</Button>
+          </Popconfirm>,
+          <Popconfirm
+            placement="topRight"
+            title={`Are you sure to delete ${item.hashTag}?`}
+            onConfirm={() => deleteItem(item)}
+            okText="yes"
+            cancelText="no"
+            icon={<QuestionCircleFilled />}
+          >
+            <Button type="danger" icon={<DeleteFilled />}>Delete</Button>
           </Popconfirm>
         ]}
       >
