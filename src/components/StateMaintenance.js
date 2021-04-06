@@ -100,8 +100,8 @@ export const StateMaintenance = () => {
 
   return (
     <>
+      <h1>Serverless Demo Client - State Maintenance</h1>
       <List
-        header={<h1>Serverless Demo Client - State Maintenance</h1>}
         size='small'
         bordered={true}
         loading={loading}
