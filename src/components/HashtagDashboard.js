@@ -1,3 +1,5 @@
+import { SectionTitle } from './SectionTitle';
+
 export const HashtagDashboard = () => (
-    <h1>Dashboard</h1>
+    <SectionTitle title="Dashboard" />
 );

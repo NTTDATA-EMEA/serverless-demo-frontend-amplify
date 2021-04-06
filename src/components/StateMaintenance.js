@@ -8,6 +8,7 @@ import {
 } from '../graphql/subscriptions';
 import { Button, List, Popconfirm } from 'antd';
 import { DeleteFilled, QuestionCircleFilled, UndoOutlined } from '@ant-design/icons';
+import { SectionTitle } from './SectionTitle';
 import * as stateService from '../services/StateService';
 
 export const StateMaintenance = () => {
@@ -100,10 +101,9 @@ export const StateMaintenance = () => {
 
   return (
     <>
-      <h1>Serverless Demo Client - State Maintenance</h1>
       <List
         size='small'
-        bordered={true}
+        bordered={false}
         loading={loading}
         dataSource={state}
         renderItem={renderItem} />
