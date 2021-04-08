@@ -2,22 +2,18 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Layout, Menu, PageHeader } from 'antd';
 import { StateMaintenance } from './components/StateMaintenance';
 import { HashtagDashboard } from './components/HashtagDashboard';
-import styled from 'styled-components';
 import 'antd/dist/antd.css';
 
-const Wrapper = styled.div`
-  padding: 0 10px
-`;
 
 const { Header, Content, Footer } = Layout;
 
 function App() {
   return (
     <>
-    <PageHeader
-    className="site-page-header"
-    title="Serverless Demo Client"
-  />
+      <PageHeader
+        className="site-page-header"
+        title="Serverless Demo Client"
+      />
       <Router>
         <Layout className="layout">
           <Header>

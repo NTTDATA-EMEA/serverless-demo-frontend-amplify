@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useReducer } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import {
   getSlsDemoTwitterState as GetState
@@ -8,12 +8,16 @@ import {
 } from '../graphql/subscriptions';
 import { Button, List, Popconfirm } from 'antd';
 import { DeleteFilled, QuestionCircleFilled, UndoOutlined } from '@ant-design/icons';
-import { SectionTitle } from './SectionTitle';
+import { stateMaintenanceReducer } from './stateMaintenanceReducer';
 import * as stateService from '../services/StateService';
 
+const initialState = {
+  hashTags: [],
+  loading: true
+}
+
 export const StateMaintenance = () => {
-  const [loading, setLoading] = useState(true);
-  const [state, setState] = useState([]);
+  const [stateS, dispatch] = useReducer(stateMaintenanceReducer, initialState);
 
   useEffect(() => {
     fetchState();
@@ -44,25 +48,33 @@ export const StateMaintenance = () => {
     const arrayState = Array.from(mapState, ([hashTag, latestId]) => ({ hashTag, latestId }));
     const arrayStateSorted = arrayState.sort((a, b) => a.hashTag < b.hashTag ? -1 : 1);
 
-    setState(arrayStateSorted);
-    setLoading(false);
+    dispatch({
+      type: "SET_HASHTAGS",
+      payload: arrayStateSorted
+    });
   }
 
   const resetItemLatestId = async (item) => {
-    const updatedState = [...state];
-    updatedState[updatedState.findIndex(i => i.hashTag === item.hashTag)].latestId = 0;
-    setState(updatedState);
-    stateService.updateState(updatedState);
+    const updatedHashtags = [...stateS.hashTags];
+    updatedHashtags[updatedHashtags.findIndex(i => i.hashTag === item.hashTag)].latestId = 0;
+    dispatch({
+      type: "RESET_HASHTAG",
+      payload: updatedHashtags
+    });
+    stateService.updateState(updatedHashtags);
   }
 
-  const deleteItem = async (item) => {
-    const index = state.findIndex(i => i.hashTag === item.hashTag);
-    const updatedState = [
-      ...state.slice(0, index),
-      ...state.slice(index + 1)
-    ];
-    setState(updatedState);
-    stateService.updateState(updatedState);
+  const deleteItem = (item) => {
+    const index = stateS.hashTags.findIndex(i => i.hashTag === item.hashTag);
+    const updatedHashtags = [
+      ...stateS.hashTags.slice(0, index),
+      ...stateS.hashTags.slice(index + 1)
+    ];    
+    dispatch({
+      type: "DELETE_HASHTAG",
+      payload: updatedHashtags
+    });
+    stateService.updateState(updatedHashtags);
   }
 
   const renderItem = (item) => {
@@ -104,8 +116,8 @@ export const StateMaintenance = () => {
       <List
         size='small'
         bordered={false}
-        loading={loading}
-        dataSource={state}
+        loading={stateS.loading}
+        dataSource={stateS.hashTags}
         renderItem={renderItem} />
     </>
   );

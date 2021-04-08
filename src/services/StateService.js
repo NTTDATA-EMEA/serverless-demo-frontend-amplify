@@ -1,13 +1,13 @@
-import { API, graphqlOperation } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import {
   updateSlsDemoTwitterState
 } from '../graphql/mutations';
 
-export const updateState = async (updatedState) => {
+export const updateState = async (hashTags) => {
   try {
     await API.graphql({
       query: updateSlsDemoTwitterState,
-      variables: { input: { namespace: 'aboczek', version: '1', state: transformStateToJson(updatedState) } }
+      variables: { input: { namespace: 'aboczek', version: '1', state: transformStateToJson(hashTags) } }
     });
   } catch (err) {
     console.log(err);
