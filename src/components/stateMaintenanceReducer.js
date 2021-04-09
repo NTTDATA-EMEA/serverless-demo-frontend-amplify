@@ -1,4 +1,4 @@
-export const stateMaintenanceReducer = (state, action) => {
+export const reducer = (state, action) => {
     switch(action.type) {
         case "SET_HASHTAGS":
             return {
