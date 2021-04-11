@@ -8,7 +8,7 @@ import {
 } from '../graphql/subscriptions';
 import { Button, List, Popconfirm } from 'antd';
 import { DeleteFilled, QuestionCircleFilled, UndoOutlined } from '@ant-design/icons';
-import { stateMaintenanceReducer } from './stateMaintenanceReducer';
+import { reducer } from './stateMaintenanceReducer';
 import * as stateService from '../services/StateService';
 
 const initialState = {
@@ -17,7 +17,7 @@ const initialState = {
 }
 
 export const StateMaintenance = () => {
-  const [stateS, dispatch] = useReducer(stateMaintenanceReducer, initialState);
+  const [stateS, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     fetchState();
