@@ -16,8 +16,7 @@ export const reducer = (state, action) => {
       updatedHashtags[updatedHashtags.findIndex(i => i.hashTag === action.payload.hashTag)].latestId = 0;
       return {
         ...state,
-        hashTags: updatedHashtags,
-        loading: false
+        hashTags: updatedHashtags
       }
     };
     case "DELETE_HASHTAG":
@@ -28,10 +27,25 @@ export const reducer = (state, action) => {
       ];
       return {
         ...state,
-        hashTags: updatedHashtags,
-        loading: false
+        hashTags: updatedHashtags
       };
+    case "SET_INPUT":
+      return {
+        ...state,
+        form: { hashTag: action.payload, latestId: 0 }
+      }
+    case "RESET_INPUT":
+      return {
+        ...state,
+        form: { hashTag: '', latestId: 0 }
+      }
+    case "ERROR":
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      }
     default:
-      return state;
+      throw new Error(`Unknow action type: ${action.type}`);
   }
 }

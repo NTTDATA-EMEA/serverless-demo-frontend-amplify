@@ -6,14 +6,16 @@ import {
 import {
   onUpdateSlsDemoTwitterState as onUpdateState
 } from '../graphql/subscriptions';
-import { Button, List, Popconfirm } from 'antd';
+import { Button, List, Popconfirm, Input } from 'antd';
 import { DeleteFilled, QuestionCircleFilled, UndoOutlined } from '@ant-design/icons';
 import { reducer } from './stateMaintenanceReducer';
 import * as stateService from '../services/StateService';
 
 const initialState = {
   hashTags: [],
-  loading: true
+  loading: true,
+  error: false,
+  form: { hashTag: '', latestId: 0 }
 }
 
 export const StateMaintenance = () => {
@@ -37,8 +39,9 @@ export const StateMaintenance = () => {
   }, []);
 
   useEffect(() => {
-    if (state.hashTags.length > 0) stateService.updateState(state.hashTags);
-  }, [state.hashTags]);
+    console.log("useEffect 2");
+    // if (state.hashTags.length > 0) stateService.updateState(state.hashTags);
+  }, [state]);
 
   async function fetchState() {
     const stateData = await API.graphql(
@@ -56,21 +59,35 @@ export const StateMaintenance = () => {
       type: "SET_HASHTAGS",
       payload: arrayStateSorted
     });
-  }
+  };
 
   const resetItemLatestId = async (item) => {
     dispatch({
       type: "RESET_HASHTAG",
       payload: item
     });
-  }
+  };
 
   const deleteItem = (item) => {
     dispatch({
       type: "DELETE_HASHTAG",
       payload: item
     });
-  }
+  };
+
+  const onChange = (e) => {
+    dispatch({
+      type: "SET_INPUT",
+      payload: e.target.value.trim()
+    });
+  };
+
+  const addItem = () => {
+    const { form } = state;
+    if (!form.hashTag) return alert("Hashtag must not be empty!");
+    dispatch({ type: "RESET_INPUT" });
+
+  };
 
   const renderItem = (item) => {
     return (
@@ -108,6 +125,16 @@ export const StateMaintenance = () => {
 
   return (
     <>
+      <Input
+        value={state.form.hashTag}
+        onChange={(e) => onChange(e)}
+        placeholder="Hashtag"
+        name="hashTag"
+      />
+      <Button
+        type="primary"
+        onClick={addItem}
+      >Add Hashtag</Button>
       <List
         size='small'
         bordered={false}
