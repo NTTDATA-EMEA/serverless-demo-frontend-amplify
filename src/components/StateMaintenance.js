@@ -37,7 +37,7 @@ export const StateMaintenance = () => {
   }, []);
 
   useEffect(() => {
-    stateService.updateState(state.hashTags);
+    if (state.hashTags.length > 0) stateService.updateState(state.hashTags);
   }, [state.hashTags]);
 
   async function fetchState() {
@@ -59,23 +59,16 @@ export const StateMaintenance = () => {
   }
 
   const resetItemLatestId = async (item) => {
-    const updatedHashtags = [...state.hashTags];
-    updatedHashtags[updatedHashtags.findIndex(i => i.hashTag === item.hashTag)].latestId = 0;
     dispatch({
       type: "RESET_HASHTAG",
-      payload: updatedHashtags
+      payload: item
     });
   }
 
   const deleteItem = (item) => {
-    const index = state.hashTags.findIndex(i => i.hashTag === item.hashTag);
-    const updatedHashtags = [
-      ...state.hashTags.slice(0, index),
-      ...state.hashTags.slice(index + 1)
-    ];
     dispatch({
       type: "DELETE_HASHTAG",
-      payload: updatedHashtags
+      payload: item
     });
   }
 
