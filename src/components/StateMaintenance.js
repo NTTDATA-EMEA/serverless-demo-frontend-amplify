@@ -17,7 +17,7 @@ const initialState = {
 }
 
 export const StateMaintenance = () => {
-  const [stateS, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     fetchState();
@@ -35,6 +35,10 @@ export const StateMaintenance = () => {
     })
     return () => subscription.unsubscribe();;
   }, []);
+
+  useEffect(() => {
+    stateService.updateState(state.hashTags);
+  }, [state.hashTags]);
 
   async function fetchState() {
     const stateData = await API.graphql(
@@ -55,26 +59,24 @@ export const StateMaintenance = () => {
   }
 
   const resetItemLatestId = async (item) => {
-    const updatedHashtags = [...stateS.hashTags];
+    const updatedHashtags = [...state.hashTags];
     updatedHashtags[updatedHashtags.findIndex(i => i.hashTag === item.hashTag)].latestId = 0;
     dispatch({
       type: "RESET_HASHTAG",
       payload: updatedHashtags
     });
-    stateService.updateState(updatedHashtags);
   }
 
   const deleteItem = (item) => {
-    const index = stateS.hashTags.findIndex(i => i.hashTag === item.hashTag);
+    const index = state.hashTags.findIndex(i => i.hashTag === item.hashTag);
     const updatedHashtags = [
-      ...stateS.hashTags.slice(0, index),
-      ...stateS.hashTags.slice(index + 1)
-    ];    
+      ...state.hashTags.slice(0, index),
+      ...state.hashTags.slice(index + 1)
+    ];
     dispatch({
       type: "DELETE_HASHTAG",
       payload: updatedHashtags
     });
-    stateService.updateState(updatedHashtags);
   }
 
   const renderItem = (item) => {
@@ -116,8 +118,8 @@ export const StateMaintenance = () => {
       <List
         size='small'
         bordered={false}
-        loading={stateS.loading}
-        dataSource={stateS.hashTags}
+        loading={state.loading}
+        dataSource={state.hashTags}
         renderItem={renderItem} />
     </>
   );
