@@ -40,7 +40,9 @@ export const StateMaintenance = () => {
   }, []);
 
   useEffect(() => {
-    if (state.isDirty > 0) stateService.updateState(state.hashTags);
+    if (state.isDirty) {
+      stateService.updateState(state.hashTags);
+    }
   }, [state]);
 
   async function fetchState() {
@@ -85,8 +87,12 @@ export const StateMaintenance = () => {
   const addItem = () => {
     const { form } = state;
     if (!form.hashTag) return alert("Hashtag must not be empty!");
-    dispatch({ type: "RESET_INPUT" });
+    const newHashTag = { ...form };
+    if (!newHashTag.hashTag.startsWith("#")) newHashTag.hashTag = "#" + newHashTag.hashTag;
+    if (state.hashTags.some(h => h.hashTag === newHashTag.hashTag)) return alert(`Hashtag ${newHashTag.hashTag} is already present in the configuration.`);
 
+    dispatch({ type: "RESET_INPUT" });
+    dispatch({ type: "ADD_HASHTAG", payload: newHashTag });
   };
 
   const renderItem = (item) => {
@@ -128,6 +134,7 @@ export const StateMaintenance = () => {
       <Form layout="inline" style={{ padding: 20 }}>
         <Form.Item label="Hashtag">
           <Input
+            prefix="#"
             value={state.form.hashTag}
             onChange={(e) => onChange(e)}
             placeholder="Hashtag"

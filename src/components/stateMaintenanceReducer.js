@@ -5,6 +5,14 @@ export const reducer = (state, action) => {
         ...state,
         loading: action.payload
       }
+    case "ADD_HASHTAG": {
+      const updatedHashtags = [action.payload, ...state.hashTags];
+      return {
+        ...state,
+        hashTags: updatedHashtags,
+        isDirty: true
+      }
+    }
     case "SET_HASHTAGS":
       return {
         ...state,
