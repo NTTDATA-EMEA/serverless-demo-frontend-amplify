@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Layout, Menu, PageHeader } from 'antd';
 import { StateMaintenance } from './components/StateMaintenance';
@@ -8,6 +9,8 @@ import 'antd/dist/antd.css';
 const { Header, Content, Footer } = Layout;
 
 function App() {
+  const [selectedKey, setSelectedKey] = useState("1");
+
   return (
     <>
       <PageHeader
@@ -18,12 +21,12 @@ function App() {
         <Layout className="layout">
           <Header>
             <div className="logo"></div>
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-              <Menu.Item key="1">
+            <Menu theme="dark" mode="horizontal" selectedKeys={[selectedKey]}>
+              <Menu.Item key="1" onClick={() => setSelectedKey("1")}>
                 <span>Dashboard</span>
                 <Link to="/" />
               </Menu.Item>
-              <Menu.Item key="2">
+              <Menu.Item key="2" onClick={() => setSelectedKey("2")}>
                 <span>Admin</span>
                 <Link to="/admin" />
               </Menu.Item>
