@@ -6,7 +6,7 @@ import {
 import {
   onUpdateSlsDemoTwitterState as onUpdateState
 } from '../graphql/subscriptions';
-import { Button, List, Popconfirm, Input } from 'antd';
+import { Layout, Button, List, Popconfirm, Input, Form } from 'antd';
 import { DeleteFilled, QuestionCircleFilled, UndoOutlined } from '@ant-design/icons';
 import { reducer } from './stateMaintenanceReducer';
 import * as stateService from '../services/StateService';
@@ -125,23 +125,31 @@ export const StateMaintenance = () => {
 
   return (
     <>
-      <Input
-        value={state.form.hashTag}
-        onChange={(e) => onChange(e)}
-        placeholder="Hashtag"
-        name="hashTag"
-      />
-      <Button
-        type="primary"
-        onClick={addItem}
-      >Add Hashtag</Button>
-      <List
-        header={<h3>Hashtags with current Twitter latest Tweet Id</h3>}
-        size='small'
-        bordered={true}
-        loading={state.loading}
-        dataSource={state.hashTags}
-        renderItem={renderItem} />
+      <Form layout="inline" style={{ padding: 20 }}>
+        <Form.Item label="Hashtag">
+          <Input
+            value={state.form.hashTag}
+            onChange={(e) => onChange(e)}
+            placeholder="Hashtag"
+            name="hashTag"
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            onClick={addItem}
+          >Add Hashtag</Button>
+        </Form.Item>
+      </Form>
+      <Layout>
+        <List
+          header={<h3>Hashtags with latest Tweet Id</h3>}
+          size='small'
+          bordered={true}
+          loading={state.loading}
+          dataSource={state.hashTags}
+          renderItem={renderItem} />
+      </Layout>
     </>
   );
 }
