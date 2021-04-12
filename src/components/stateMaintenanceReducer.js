@@ -9,14 +9,16 @@ export const reducer = (state, action) => {
       return {
         ...state,
         hashTags: action.payload,
-        loading: false
+        loading: false,
+        isDirty: false
       };
     case "RESET_HASHTAG": {
       const updatedHashtags = [...state.hashTags];
       updatedHashtags[updatedHashtags.findIndex(i => i.hashTag === action.payload.hashTag)].latestId = 0;
       return {
         ...state,
-        hashTags: updatedHashtags
+        hashTags: updatedHashtags,
+        isDirty: true
       }
     };
     case "DELETE_HASHTAG":
@@ -27,23 +29,27 @@ export const reducer = (state, action) => {
       ];
       return {
         ...state,
-        hashTags: updatedHashtags
+        hashTags: updatedHashtags,
+        isDirty: true
       };
     case "SET_INPUT":
       return {
         ...state,
-        form: { hashTag: action.payload, latestId: 0 }
+        form: { hashTag: action.payload, latestId: 0 },
+        isDirty: false
       }
     case "RESET_INPUT":
       return {
         ...state,
-        form: { hashTag: '', latestId: 0 }
+        form: { hashTag: '', latestId: 0 },
+        isDirty: false
       }
     case "ERROR":
       return {
         ...state,
         loading: false,
-        error: action.payload
+        error: action.payload,
+        isDirty: false
       }
     default:
       throw new Error(`Unknow action type: ${action.type}`);

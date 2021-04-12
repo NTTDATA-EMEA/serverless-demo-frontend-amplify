@@ -13,6 +13,7 @@ import * as stateService from '../services/StateService';
 
 const initialState = {
   hashTags: [],
+  isDirty: false,
   loading: true,
   error: false,
   form: { hashTag: '', latestId: 0 }
@@ -39,8 +40,7 @@ export const StateMaintenance = () => {
   }, []);
 
   useEffect(() => {
-    console.log("useEffect 2");
-    // if (state.hashTags.length > 0) stateService.updateState(state.hashTags);
+    if (state.isDirty > 0) stateService.updateState(state.hashTags);
   }, [state]);
 
   async function fetchState() {
@@ -101,7 +101,7 @@ export const StateMaintenance = () => {
             cancelText="no"
             icon={<QuestionCircleFilled />}
           >
-            <Button type="default" icon={<UndoOutlined />}>Reset</Button>
+            <Button type="default" icon={<UndoOutlined />}>Reset latest Tweet Id</Button>
           </Popconfirm>,
           <Popconfirm
             placement="topRight"
@@ -136,8 +136,9 @@ export const StateMaintenance = () => {
         onClick={addItem}
       >Add Hashtag</Button>
       <List
+        header={<h3>Hashtags with current Twitter latest Tweet Id</h3>}
         size='small'
-        bordered={false}
+        bordered={true}
         loading={state.loading}
         dataSource={state.hashTags}
         renderItem={renderItem} />
