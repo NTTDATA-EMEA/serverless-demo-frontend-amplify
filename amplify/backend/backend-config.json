@@ -7,7 +7,7 @@
     }
   },
   "auth": {
-    "aboczekslsdemoclient7773e8c1": {
+    "aboczekslsdemoclient90307283": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
